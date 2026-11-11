@@ -2,10 +2,10 @@ name: Attendance CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     tags: ["*"]
   pull_request:
-    branches: [main]
+    branches: [master]
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
@@ -20,7 +20,7 @@ env:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/master')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -48,7 +48,7 @@ jobs:
 
   unit_tests:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -58,7 +58,7 @@ jobs:
 
   package:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))) || github.event_name == 'schedule'
+    if: (github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))) || github.event_name == 'schedule'
     steps:
       - uses: actions/checkout@v4
       - name: Create distribution
@@ -80,7 +80,7 @@ jobs:
 
   deploy_test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master'
     needs: package
     environment:
       name: test/attendance
