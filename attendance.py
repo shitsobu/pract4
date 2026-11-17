@@ -14,7 +14,7 @@ def calculate_duration(start: str, end: str) -> int:
     end_time = datetime.strptime(end, TIME_FORMAT)
     if end_time < start_time:
         end_time += timedelta(days=1)
-    return int((end_time - start_time).total_seconds() // 60)
+    return int((end_time - start_time).total_seconds() // 60) + 1
 
 
 def read_attendance(path: str | Path) -> list[dict[str, str]]:
